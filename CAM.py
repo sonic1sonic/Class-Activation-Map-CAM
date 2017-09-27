@@ -78,7 +78,7 @@ def CAM(input_img, model, feature_layer_name, weight_layer_name, transform=None,
     # forward
     output = model(img)
 
-    # remove the handle
+    # remove the hook
     handle.remove()
 
     class_idx = torch.max(output, 1)[1].data.cpu().numpy()[0]
