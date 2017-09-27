@@ -59,7 +59,7 @@ def CAM(input_img, model, feature_layer_name, weight_layer_name, transform=None,
             feature_maps.append(output.cpu().data.numpy())
         else:
             feature_maps.append(output.data.numpy())
-    model._modules.get(feature_layer_name).register_forward_hook(hook)
+    handle = model._modules.get(feature_layer_name).register_forward_hook(hook)
 
     params = model.state_dict()[weight_layer_name]
     if USE_GPU:
@@ -77,6 +77,9 @@ def CAM(input_img, model, feature_layer_name, weight_layer_name, transform=None,
 
     # forward
     output = model(img)
+
+    # remove the handle
+    handle.remove()
 
     class_idx = torch.max(output, 1)[1].data.cpu().numpy()[0]
 
